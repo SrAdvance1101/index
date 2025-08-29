@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdvanceStudiostm</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            opacity: 0;
+            transition: opacity 2s;
+            overflow: hidden; /* para que las partículas no generen scroll */
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            padding: 40px 20px;
+            text-align: center;
+            position: relative;
+            z-index: 2; /* encima del canvas */
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            color: #00ccff;
+        }
+
+        p.description {
+            font-size: 1.2em;
+            color: #cccccc;
+            margin-bottom: 40px;
+        }
+
+        .download-btn {
+            display: inline-block;
+            margin: 10px;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            color: #fff;
+            background-color: #222;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .download-btn:hover {
+            background-color: #00ccff;
+            color: #000;
+        }
+
+        footer {
+            margin-top: 60px;
+        }
+
+        .social-btn {
+            display: inline-block;
+            margin: 0 10px;
+            padding: 10px 20px;
+            font-size: 1em;
+            color: #fff;
+            background-color: #222;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .social-btn:hover {
+            background-color: #00ccff;
+            color: #000;
+        }
+
+        /* Canvas de partículas detrás de todo */
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Canvas para partículas -->
+    <canvas id="particles-canvas"></canvas>
+
+    <div class="container">
+        <h1>Bienvenido a AdvanceStudiostm</h1>
+        <p class="description">Descripción aquí</p>
+
+        <div>
+            <button class="download-btn">Descargar para PC</button>
+            <button class="download-btn">Descargar para Android</button>
+        </div>
+
+        <footer>
+            <a href="#" class="social-btn">Discord</a>
+            <a href="#" class="social-btn">YouTube</a>
+            <a href="#" class="social-btn">Correo</a>
+        </footer>
+    </div>
+
+    <script>
+        // Crossfade al cargar
+        window.addEventListener('load', () => {
+            document.body.style.opacity = '1';
+        });
+
+        // ===== Partículas flotantes =====
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        const particleCount = 80;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.radius = Math.random() * 3 + 1;
+                this.speed = Math.random() * 0.3 + 0.1;
+                this.angle = Math.random() * 2 * Math.PI;
+            }
+
+            update() {
+                this.y -= this.speed;
+                if (this.y < -this.radius) {
+                    this.y = canvas.height + this.radius;
+                    this.x = Math.random() * canvas.width;
+                }
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(0,204,255,0.5)';
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+</body>
+</html>
